@@ -19,9 +19,14 @@
   "environment": "*",
   "entrypoints": {
     "stationapi:event_bus": [
-      "ralf2oo2.portalgun.events.init.InitListener"
+      "ralf2oo2.portalgun.PortalGun",
+      "ralf2oo2.portalgun.events.init.BlockRegistry",
+      "ralf2oo2.portalgun.events.init.ItemRegistry",
+      "ralf2oo2.portalgun.events.init.BlockEntityRegistry",
+      "ralf2oo2.portalgun.events.init.PacketRegistry"
     ],
     "stationapi:event_bus_client": [
+      "ralf2oo2.portalgun.client.PortalGunClient"
     ],
     "stationapi:event_bus_server": [
     ]

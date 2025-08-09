@@ -10,6 +10,9 @@ import ralf2oo2.portalgun.entity.PortalProjectileEntity;
 public class PortalGunItem extends TemplateItem {
     public PortalGunItem(Identifier identifier) {
         super(identifier);
+        setMaxCount(1);
+        setHasSubtypes(true);
+        setMaxDamage(0);
     }
 
     @Override

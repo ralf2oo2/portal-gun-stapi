@@ -35,6 +35,8 @@ public class EntityLocationPacket extends Packet implements ManagedPacket<Entity
     public float yaw;
     public float pitch;
 
+    public static final PacketType<EntityLocationPacket> TYPE = PacketType.builder(true, false, EntityLocationPacket::new).build();
+
     public EntityLocationPacket(){}
 
     public EntityLocationPacket(Entity ent){

@@ -16,7 +16,7 @@ public class PortalBlock extends TemplateBlockWithEntity {
 
     public static final Box EMPTY_BOX = Box.create(0.0D, 0.0D, 0.0D, 0.0D, 0.0D, 0.0D);
 
-    public PortalBlock(Identifier identifier, Material material) {
+    public PortalBlock(Identifier identifier) {
         super(identifier, Material.METAL);
         setHardness(-1F);
         setResistance(1000000.0F);

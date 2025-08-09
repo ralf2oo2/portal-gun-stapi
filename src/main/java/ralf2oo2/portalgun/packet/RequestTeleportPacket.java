@@ -22,6 +22,8 @@ import java.io.IOException;
 public class RequestTeleportPacket extends Packet implements ManagedPacket<RequestTeleportPacket> {
     public BlockPos pos;
 
+    public static final PacketType<RequestTeleportPacket> TYPE = PacketType.builder(false, true, RequestTeleportPacket::new).build();
+
     public RequestTeleportPacket(){}
     public RequestTeleportPacket(BlockPos pos){
         this.pos = pos;

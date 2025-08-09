@@ -16,6 +16,8 @@ public class PortalStatusPacket extends Packet implements ManagedPacket<PortalSt
     public boolean blue;
     public boolean orange;
 
+    public static final PacketType<PortalStatusPacket> TYPE = PacketType.builder(true, false, PortalStatusPacket::new).build();
+
     public PortalStatusPacket(){}
 
     public PortalStatusPacket(boolean blue, boolean orange){

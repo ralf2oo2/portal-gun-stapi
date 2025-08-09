@@ -14,6 +14,7 @@ import net.modificationstation.stationapi.api.util.math.Direction;
 import ralf2oo2.portalgun.PortalGun;
 import ralf2oo2.portalgun.block.PortalBlock;
 import ralf2oo2.portalgun.block.entity.PortalBlockEntity;
+import ralf2oo2.portalgun.events.init.BlockRegistry;
 
 public class PortalProjectileEntity extends Entity {
     public static final int ORANGE = 30;
@@ -234,7 +235,7 @@ public class PortalProjectileEntity extends Entity {
             {
                 PortalGun.getState(world).kill(world, isOrange());
 
-                world.setBlockState(pos, PortalGunClassic.blockPortalGun.getDefaultState());
+                world.setBlockState(pos, BlockRegistry.portalBlock.getDefaultState());
                 BlockEntity te = world.getBlockEntity(pos.getX(), pos.getY(), pos.getZ());
                 if(te instanceof PortalBlockEntity portalBlockEntity)
                 {
@@ -242,7 +243,7 @@ public class PortalProjectileEntity extends Entity {
                 }
                 if(sideHit.getAxis() != Direction.Axis.Y)
                 {
-                    world.setBlockState(pos.down(), PortalGunClassic.blockPortalGun.getDefaultState());
+                    world.setBlockState(pos.down(), BlockRegistry.portalBlock.getDefaultState());
                     te = world.getBlockEntity(pos.down().getX(), pos.down().getY(), pos.down().getZ());
                     if(te instanceof PortalBlockEntity portalBlockEntity)
                     {
