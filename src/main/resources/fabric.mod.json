@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "%s",
+  "id": "portalgun",
   "version": "${version}",
 
   "name": "Example Mod",
@@ -14,12 +14,12 @@
   },
 
   "license": "CC0-1.0",
-  "icon": "assets/%s/icon.png",
+  "icon": "assets/portalgun/icon.png",
 
   "environment": "*",
   "entrypoints": {
     "stationapi:event_bus": [
-      "%s.events.init.InitListener"
+      "ralf2oo2.portalgun.events.init.InitListener"
     ],
     "stationapi:event_bus_client": [
     ],
@@ -27,7 +27,7 @@
     ]
   },
   "mixins": [
-    "%s.mixins.json"
+    "portalgun.mixins.json"
   ],
 
   "depends": {

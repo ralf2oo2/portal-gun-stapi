@@ -1,10 +1,10 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "%s.mixin",
+  "package": "ralf2oo2.portalgun.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "ExampleMixin"
+    "EntityAccessor"
   ],
   "server": [
   ],
