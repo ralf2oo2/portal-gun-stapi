@@ -11,6 +11,6 @@ public class ItemRegistry {
     public static Item portalGunItem;
     @EventListener
     public void registerItems(ItemRegistryEvent event){
-        portalGunItem = new PortalGunItem(Identifier.of(PortalGun.NAMESPACE, "portal_gun"));
+        portalGunItem = new PortalGunItem(Identifier.of(PortalGun.NAMESPACE, "portal_gun")).setTranslationKey(Identifier.of(PortalGun.NAMESPACE, "portal_gun"));
     }
 }

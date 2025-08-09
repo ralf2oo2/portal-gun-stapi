@@ -57,6 +57,6 @@ public class PortalStatusPacket extends Packet implements ManagedPacket<PortalSt
 
     @Override
     public @NotNull PacketType<PortalStatusPacket> getType() {
-        return null;
+        return TYPE;
     }
 }

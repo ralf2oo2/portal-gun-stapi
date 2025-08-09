@@ -61,7 +61,7 @@ public class EntityLocationPacket extends Packet implements ManagedPacket<Entity
 
     @Override
     public @NotNull PacketType<EntityLocationPacket> getType() {
-        return null;
+        return TYPE;
     }
 
     @Override

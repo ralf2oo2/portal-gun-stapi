@@ -29,6 +29,7 @@ public class PortalProjectileEntity extends Entity {
     public PortalProjectileEntity(World world, Entity entity, boolean isOrange){
         this(world);
         this.dataTracker.set(ORANGE, isOrange ? 1 : 0);
+        shoot(entity, 4.999F);
         setPositionAndAngles(entity.x, entity.y + entity.getEyeHeight() - (width / 2F), entity.z, entity.yaw, entity.pitch);
     }
 
@@ -85,7 +86,7 @@ public class PortalProjectileEntity extends Entity {
     }
 
     @Override
-    public void baseTick() {
+    public void tick() {
         if(y > world.getHeight() * 2 || y < -world.getBottomY() || age > 1200) //a minute
         {
             markDead();
@@ -98,7 +99,7 @@ public class PortalProjectileEntity extends Entity {
         this.lastTickY = this.y;
         this.lastTickZ = this.z;
 
-        super.baseTick();
+        super.tick();
 
         Vec3d vec31 = Vec3d.create(this.x, this.y, this.z);
         Vec3d vec32 = Vec3d.create(this.x + this.velocityX, this.y + this.velocityY, this.z + this.velocityZ);

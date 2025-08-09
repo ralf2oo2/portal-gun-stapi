@@ -13,8 +13,8 @@ import ralf2oo2.portalgun.packet.RequestTeleportPacket;
 public class PacketRegistry {
     @EventListener
     public void registerPackets(PacketRegisterEvent event){
-        Registry.register(PacketTypeRegistry.INSTANCE, Identifier.of(PortalGun.NAMESPACE, "entity_location_packet"), EntityLocationPacket.TYPE);
-        Registry.register(PacketTypeRegistry.INSTANCE, Identifier.of(PortalGun.NAMESPACE, "portal_status_packet"), PortalStatusPacket.TYPE);
-        Registry.register(PacketTypeRegistry.INSTANCE, Identifier.of(PortalGun.NAMESPACE, "request_teleport_packet"), RequestTeleportPacket.TYPE);
+        Registry.register(PacketTypeRegistry.INSTANCE, Identifier.of(PortalGun.NAMESPACE, "entity_location"), EntityLocationPacket.TYPE);
+        Registry.register(PacketTypeRegistry.INSTANCE, Identifier.of(PortalGun.NAMESPACE, "portal_status"), PortalStatusPacket.TYPE);
+        Registry.register(PacketTypeRegistry.INSTANCE, Identifier.of(PortalGun.NAMESPACE, "request_teleport"), RequestTeleportPacket.TYPE);
     }
 }

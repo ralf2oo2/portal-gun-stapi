@@ -74,6 +74,6 @@ public class RequestTeleportPacket extends Packet implements ManagedPacket<Reque
 
     @Override
     public @NotNull PacketType<RequestTeleportPacket> getType() {
-        return null;
+        return TYPE;
     }
 }
