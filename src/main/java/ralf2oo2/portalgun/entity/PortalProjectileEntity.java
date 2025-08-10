@@ -16,6 +16,7 @@ import ralf2oo2.portalgun.PortalGun;
 import ralf2oo2.portalgun.block.PortalBlock;
 import ralf2oo2.portalgun.block.entity.PortalBlockEntity;
 import ralf2oo2.portalgun.events.init.BlockRegistry;
+import ralf2oo2.portalgun.util.Util;
 
 public class PortalProjectileEntity extends Entity {
     public static final int ORANGE = 30;
@@ -88,6 +89,9 @@ public class PortalProjectileEntity extends Entity {
 
     @Override
     public void tick() {
+
+
+
         world.addParticle("note", (double)x, (double)y, (double)z, (double)0, (double)0.0F, (double)0.0F);
         if(y > world.getHeight() * 2 || y < -world.getBottomY() || age > 1200) //a minute
         {
@@ -101,12 +105,13 @@ public class PortalProjectileEntity extends Entity {
         this.lastTickY = this.y;
         this.lastTickZ = this.z;
 
-        super.tick();
-
         // Projectile won't move without this
         this.x += this.velocityX;
         this.y += this.velocityY;
         this.z += this.velocityZ;
+        this.setPosition(this.x, this.y, this.z);
+
+        super.tick();
 
         Vec3d vec31 = Vec3d.create(this.x, this.y, this.z);
         Vec3d vec32 = Vec3d.create(this.x + this.velocityX, this.y + this.velocityY, this.z + this.velocityZ);
@@ -214,13 +219,13 @@ public class PortalProjectileEntity extends Entity {
 
                     if (collisionShape != null && collisionShape != PortalBlock.EMPTY_BOX) {
                         if (block1.hasCollision(meta, true)) {
-                            HitResult raytraceresult1 = blockState.getBlock().raycast(world, blockpos.getX(), blockpos.getY(), blockpos.getZ(), vec31, vec32);
-                            if (raytraceresult1 != null) {
+                            HitResult hitResult = blockState.getBlock().raycast(world, blockpos.getX(), blockpos.getY(), blockpos.getZ(), vec31, vec32);
+                            if (hitResult != null) {
                                 if (false) // block1 == Blocks.IRON_BARS
                                 {
-                                    vec31 = Vec3d.create(raytraceresult1.pos.x + (velocityX / 5000D), raytraceresult1.pos.y + (velocityY / 5000D), raytraceresult1.pos.z + (velocityZ / 5000D));
+                                    vec31 = Vec3d.create(hitResult.pos.x + (velocityX / 5000D), hitResult.pos.y + (velocityY / 5000D), hitResult.pos.z + (velocityZ / 5000D));
                                 } else {
-                                    createPortal(raytraceresult1);
+                                    createPortal(hitResult);
                                     markDead();
                                     return;
                                 }
@@ -239,9 +244,10 @@ public class PortalProjectileEntity extends Entity {
 
     public void createPortal(HitResult hitResult){
         if(!world.isRemote){
-            BlockPos pos = new BlockPos(hitResult.blockX, hitResult.blockY, hitResult.blockZ).offset(Direction.byId(hitResult.side));
-            Direction sideHit = Direction.byId(hitResult.side);
-            if(PortalBlock.canPlace(world, pos, Direction.byId(hitResult.side), isOrange()))
+            BlockPos pos = new BlockPos(hitResult.blockX, hitResult.blockY, hitResult.blockZ).offset(Util.getDirectionFromSide(hitResult.side));
+            Direction sideHit = Util.getDirectionFromSide(hitResult.side);
+            System.out.println(sideHit.toString() + " " + hitResult.side);
+            if(PortalBlock.canPlace(world, pos, Util.getDirectionFromSide(hitResult.side), isOrange()))
             {
                 PortalGun.getState(world).kill(world, isOrange());
 

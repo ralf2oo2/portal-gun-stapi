@@ -84,6 +84,8 @@ dependencies {
 	modImplementation("net.glasslauncher.mods:ModMenu:${project.properties["modmenu_version"]}")
 	// https://github.com/Glass-Series/Always-More-Items
 	modImplementation("net.glasslauncher.mods:AlwaysMoreItems:${project.properties["alwaysmoreitems_version"]}")
+	modImplementation("maven.modrinth:betterf3-stationapi:0.5.2")
+
 }
 
 tasks.withType<ProcessResources> {
