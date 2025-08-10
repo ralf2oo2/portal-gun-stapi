@@ -85,7 +85,7 @@ public class EntityLocationPacket extends Packet implements ManagedPacket<Entity
             yaw = stream.readFloat();
             pitch = stream.readFloat();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            //throw new RuntimeException(e);
         }
     }
 
@@ -110,7 +110,7 @@ public class EntityLocationPacket extends Packet implements ManagedPacket<Entity
             stream.writeFloat(yaw);
             stream.writeFloat(pitch);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            //throw new RuntimeException(e);
         }
     }
 

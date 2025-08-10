@@ -69,7 +69,7 @@ public class PortalBlockEntity extends BlockEntity {
                 continue; //we ignore players. They tell the server when they want a teleport.
             }
 
-            if(ent.getBoundingBox().offset(ent.velocityX, ent.velocityY, ent.velocityZ).intersects(aabbInside))
+            if(ent.getBoundingBox() != null && ent.getBoundingBox().offset(ent.velocityX, ent.velocityY, ent.velocityZ).intersects(aabbInside))
             {
                 if(world.isRemote)
                 {

@@ -31,7 +31,7 @@ public class PortalStatusPacket extends Packet implements ManagedPacket<PortalSt
             blue = stream.readBoolean();
             orange = stream.readBoolean();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            //throw new RuntimeException(e);
         }
     }
 
@@ -41,7 +41,7 @@ public class PortalStatusPacket extends Packet implements ManagedPacket<PortalSt
             stream.writeBoolean(blue);
             stream.writeBoolean(orange);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            //throw new RuntimeException(e);
         }
     }
 

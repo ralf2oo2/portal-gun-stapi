@@ -1,5 +1,8 @@
 package ralf2oo2.portalgun.packet;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -33,7 +36,7 @@ public class RequestTeleportPacket extends Packet implements ManagedPacket<Reque
         try {
             this.pos = StationBlockPos.fromLong(stream.readLong());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            //throw new RuntimeException(e);
         }
     }
 
@@ -42,12 +45,19 @@ public class RequestTeleportPacket extends Packet implements ManagedPacket<Reque
         try {
             stream.writeLong(pos.asLong());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            //throw new RuntimeException(e);
         }
     }
 
     @Override
     public void apply(NetworkHandler networkHandler) {
+        if(FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER){
+            handleServer(networkHandler);
+        }
+    }
+
+    @Environment(EnvType.SERVER)
+    public void handleServer(NetworkHandler networkHandler){
         PlayerEntity playerEntity = PlayerHelper.getPlayerFromPacketHandler(networkHandler);
         if(playerEntity == null) return;
         if(playerEntity instanceof ServerPlayerEntity serverPlayerEntity){

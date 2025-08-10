@@ -6,6 +6,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -87,6 +88,7 @@ public class PortalProjectileEntity extends Entity {
 
     @Override
     public void tick() {
+        world.addParticle("note", (double)x, (double)y, (double)z, (double)0, (double)0.0F, (double)0.0F);
         if(y > world.getHeight() * 2 || y < -world.getBottomY() || age > 1200) //a minute
         {
             markDead();
@@ -100,6 +102,11 @@ public class PortalProjectileEntity extends Entity {
         this.lastTickZ = this.z;
 
         super.tick();
+
+        // Projectile won't move without this
+        this.x += this.velocityX;
+        this.y += this.velocityY;
+        this.z += this.velocityZ;
 
         Vec3d vec31 = Vec3d.create(this.x, this.y, this.z);
         Vec3d vec32 = Vec3d.create(this.x + this.velocityX, this.y + this.velocityY, this.z + this.velocityZ);
@@ -199,13 +206,15 @@ public class PortalProjectileEntity extends Entity {
                     i1 = MathHelper.floor(vec31.y) - (direction == Direction.UP ? 1 : 0);
                     j1 = MathHelper.floor(vec31.z) - (direction == Direction.SOUTH ? 1 : 0);
                     blockpos = new BlockPos(l, i1, j1);
-                    BlockState iblockstate1 = world.getBlockState(blockpos);
+                    BlockState blockState = world.getBlockState(blockpos);
                     int meta = world.getBlockMeta(blockpos.getX(), blockpos.getY(), blockpos.getZ());
-                    Block block1 = iblockstate1.getBlock();
+                    Block block1 = blockState.getBlock();
 
-                    if (iblockstate1.getBlock().getCollisionShape(world, blockpos.getX(), blockpos.getY(), blockpos.getZ()) != PortalBlock.EMPTY_BOX) {
+                    Box collisionShape = blockState.getBlock().getCollisionShape(world, blockpos.getX(), blockpos.getY(), blockpos.getZ());
+
+                    if (collisionShape != null && collisionShape != PortalBlock.EMPTY_BOX) {
                         if (block1.hasCollision(meta, true)) {
-                            HitResult raytraceresult1 = iblockstate1.getBlock().raycast(world, blockpos.getX(), blockpos.getY(), blockpos.getZ(), vec31, vec32);
+                            HitResult raytraceresult1 = blockState.getBlock().raycast(world, blockpos.getX(), blockpos.getY(), blockpos.getZ(), vec31, vec32);
                             if (raytraceresult1 != null) {
                                 if (false) // block1 == Blocks.IRON_BARS
                                 {
