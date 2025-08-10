@@ -2,6 +2,7 @@ package ralf2oo2.portalgun.block.entity;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -10,7 +11,9 @@ import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import ralf2oo2.portalgun.client.PortalGunClient;
 import ralf2oo2.portalgun.events.init.BlockRegistry;
 import ralf2oo2.portalgun.mixin.EntityAccessor;
 
@@ -1212,5 +1215,116 @@ public class PortalBlockEntity extends BlockEntity {
 
             }
         }
+    }
+
+    public boolean isSuitable(Entity entity) {
+        double distX = (entity.boundingBox.minX + entity.boundingBox.maxX) / 2.0D - ((double)this.x + 0.5D);
+        double distZ = (entity.boundingBox.minZ + entity.boundingBox.maxZ) / 2.0D - ((double)this.z + 0.5D);
+        double centerX = Math.abs(distX);
+        double centerZ = Math.abs(distZ);
+        double centerXZ = (centerX + centerZ) / 2.0D;
+        if(this.set == 0) {
+            if(centerXZ < 0.45D && (double)this.getBB(1, false) - entity.boundingBox.maxY == 0.0D || centerXZ < 0.45D && entity.velocityY > (double)this.getBB(1, false) - entity.boundingBox.maxY && entity.velocityY > 0.0D) {
+                return true;
+            }
+        } else if(this.set == 1) {
+            if(centerXZ < 0.45D && entity.boundingBox.minY - (double)this.y == 0.0D || centerXZ < 0.45D && entity.velocityY < (double)this.y - entity.boundingBox.minY && entity.velocityY < 0.0D) {
+                return true;
+            }
+        } else if(this.set == 2) {
+            if(this.type == 1) {
+                if((centerX < 0.45D && (double)this.z - entity.boundingBox.minZ == 0.0D || centerX < 0.45D && 2.0D * entity.velocityZ < (double)this.z - entity.boundingBox.minZ) && (this.top && entity.boundingBox.maxY - (double)this.getBB(1, false) < 0.15D || !this.top && entity.boundingBox.minY - (double)this.getBB(1, true) > -0.15D)) {
+                    return true;
+                }
+            } else if(this.type == 2) {
+                if((centerZ < 0.45D && (double)this.getBB(0, false) - entity.boundingBox.maxX == 0.0D || centerZ < 0.45D && 2.0D * entity.velocityX > (double)this.getBB(0, false) - entity.boundingBox.maxX) && (this.top && entity.boundingBox.maxY - (double)this.getBB(1, false) < 0.15D || !this.top && entity.boundingBox.minY - (double)this.getBB(1, true) > -0.15D)) {
+                    return true;
+                }
+            } else if(this.type == 3) {
+                if((centerX < 0.45D && (double)this.getBB(2, false) - entity.boundingBox.maxZ == 0.0D || centerX < 0.45D && 2.0D * entity.velocityZ > (double)this.getBB(2, false) - entity.boundingBox.maxZ) && (this.top && entity.boundingBox.maxY - (double)this.getBB(1, false) < 0.15D || !this.top && entity.boundingBox.minY - (double)this.getBB(1, true) > -0.15D)) {
+                    return true;
+                }
+            } else if(this.type == 4 && (centerZ < 0.45D && (double)this.x - entity.boundingBox.minX == 0.0D || centerZ < 0.45D && 2.0D * entity.velocityX < (double)this.x - entity.boundingBox.minX) && (this.top && entity.boundingBox.maxY - (double)this.getBB(1, false) < 0.15D || !this.top && entity.boundingBox.minY - (double)this.getBB(1, true) > -0.15D)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public int renderColour() {
+        return this.cHex;
+    }
+
+    public double getAngle(LivingEntity livingEntity) {
+        float f1 = MathHelper.cos(-livingEntity.yaw * 0.01745329F - 3.141593F);
+        float f3 = MathHelper.sin(-livingEntity.yaw * 0.01745329F - 3.141593F);
+        float f5 = -MathHelper.cos(-livingEntity.pitch * 0.01745329F);
+        float f7 = MathHelper.sin(-livingEntity.pitch * 0.01745329F);
+        double lookx = (double)(f3 * f5);
+        double looky = (double)f7;
+        double lookz = (double)(f1 * f5);
+        double dx = (double)this.x + this.getXCenter() - livingEntity.x;
+        double dy = (double)this.y + this.getYCenter() - livingEntity.y - (double)livingEntity.getEyeHeight();
+        double dz = (double)this.z + this.getZCenter() - livingEntity.z;
+        double len = Math.sqrt(dx * dx + dy * dy + dz * dz);
+        double dot = dx / len * lookx + dy / len * looky + dz / len * lookz;
+        double angle = Math.acos(dot);
+        return angle;
+    }
+
+    public double getXCenter() {
+        if(this.set == 2) {
+            if(this.type == 2) {
+                return 0.95D;
+            }
+
+            if(this.type == 4) {
+                return 0.05D;
+            }
+        }
+
+        return 0.5D;
+    }
+
+    public double getYCenter() {
+        return this.set == 0 ? 0.95D : (this.set == 1 ? 0.05D : 0.5D);
+    }
+
+    public double getZCenter() {
+        if(this.set == 2) {
+            if(this.type == 1) {
+                return 0.05D;
+            }
+
+            if(this.type == 3) {
+                return 0.95D;
+            }
+        }
+
+        return 0.5D;
+    }
+
+    public boolean canSee(LivingEntity livingEntity) {
+        double viewThreshold = Math.PI / 2D;
+        return this.canSee(livingEntity, viewThreshold);
+    }
+
+    public boolean canSee(LivingEntity livingEntity, double viewThreshold) {
+        if(livingEntity == null) {
+            return false;
+        } else {
+            Minecraft mc = PortalGunClient.getMc();
+            return this.getAngle(livingEntity) < viewThreshold && !mc.options.thirdPerson && livingEntity.getDistance((double)this.x + 0.5D, (double)this.y + 0.5D, (double)this.z + 0.5D) < 65.0D || mc.options.thirdPerson && livingEntity.getDistance((double)this.x + 0.5D, (double)this.y + 0.5D, (double)this.z + 0.5D) < 65.0D || livingEntity.getDistance((double)this.x + 0.5D, (double)this.y + 0.5D, (double)this.z + 0.5D) <= 0.3D;
+        }
+    }
+
+    public boolean canEntityBeSeen(Entity entity) {
+        return this.world.raycast(Vec3d.create((double)(this.tepPair == null ? this.x : (this.x + this.tepPair.x) / 2) + this.getXCenter(), (double)(this.tepPair == null ? this.y : (this.y + this.tepPair.y) / 2) + this.getYCenter(), (double)(this.tepPair == null ? this.z : (this.z + this.tepPair.z) / 2) + this.getZCenter()), Vec3d.create(entity.x, (entity.boundingBox.maxY + entity.boundingBox.minY) / 2.0D, entity.z)) == null;
+    }
+
+    public boolean canEntityBeSeen2(Entity entity) {
+        HitResult hitResult = this.world.raycast(Vec3d.create(entity.x, entity.y + (double)entity.getEyeHeight(), entity.z), Vec3d.create((double)(this.tepPair == null ? this.x : (this.x + this.tepPair.x) / 2) + this.getXCenter(), (double)(this.tepPair == null ? this.y : (this.y + this.tepPair.y) / 2) + this.getYCenter(), (double)(this.tepPair == null ? this.z : (this.z + this.tepPair.z) / 2) + this.getZCenter()));
+        return hitResult == null || hitResult.entity == null && this.world.getBlockId(hitResult.side == 4 ? hitResult.blockX - 1 : (hitResult.side == 5 ? hitResult.blockX + 1 : hitResult.blockX), hitResult.side == 0 ? hitResult.blockY - 1 : (hitResult.side == 1 ? hitResult.blockY + 1 : hitResult.blockY), hitResult.side == 2 ? hitResult.blockZ - 1 : (hitResult.side == 3 ? hitResult.blockZ + 1 : hitResult.blockZ)) == BlockRegistry.portalBlock.id;
     }
 }
